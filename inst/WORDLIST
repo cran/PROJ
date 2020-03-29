@@ -4,6 +4,8 @@ auth
 ci
 Codecov
 coords
+CPP
+crs
 CRS
 dev
 epsg
@@ -26,7 +28,7 @@ OGC
 ORCID
 PJ
 proj
-PROJ’
+PROJJSON
 quadmesh
 quickstart
 Rcpp
@@ -41,5 +43,6 @@ WIP
 WKB
 WKT
 xymap
+xyz
 yml
 zapsmall

@@ -17,27 +17,25 @@ coverage](https://codecov.io/gh/hypertidy/PROJ/branch/master/graph/badge.svg)](h
 status](https://www.r-pkg.org/badges/version/PROJ)](https://cran.r-project.org/package=PROJ)
 [![CRAN\_Download\_Badge](http://cranlogs.r-pkg.org/badges/PROJ)](https://cran.r-project.org/package=PROJ)
 
-Note that for PROJ5 (and lower) this package is non-functional (can use
-proj4). The testing here on Travis ensures that the package installs
-successfully for various versions of PROJ, although underlying
-functionality is disabled for 4 and 5 (and for no PROJ).
-
 [![Travis
 NOPROJ](https://img.shields.io/travis/hypertidy/PROJ.svg?branch=master&env=BUILD_NAME=proj0&label=PROJ0)](https://travis-ci.org/hypertidy/PROJ)
-(no PROJ available) <br> [![Travis
+no PROJ available 👍 <br> [![Travis
 PROJ4](https://img.shields.io/travis/hypertidy/PROJ.svg?branch=master&env=BUILD_NAME=proj4&label=PROJ4)](https://travis-ci.org/hypertidy/PROJ)
-(PROJ.4 in system, no function) <br> [![Travis
+PROJ.4 in system, no function 👍 <br> [![Travis
 PROJ5](https://img.shields.io/travis/hypertidy/PROJ.svg?branch=master&env=BUILD_NAME=proj5&label=PROJ5)](https://travis-ci.org/hypertidy/PROJ)
-(PROJ 5 in system, no function) <br> [![Travis
-PROJ6](https://img.shields.io/travis/hypertidy/PROJ.svg?branch=master&env=BUILD_NAME=proj5&label=PROJ6)](https://travis-ci.org/hypertidy/PROJ)
-<br> [![Travis
-PROJ7](https://img.shields.io/travis/hypertidy/PROJ.svg?branch=master&env=BUILD_NAME=proj5&label=PROJ7)](https://travis-ci.org/hypertidy/PROJ)
-<!-- badges: end -->
+PROJ 5 in system, no function 👍 <br> [![Travis
+PROJ6](https://img.shields.io/travis/hypertidy/PROJ.svg?branch=master&env=BUILD_NAME=proj6&label=PROJ6)](https://travis-ci.org/hypertidy/PROJ)
+PROJ version 6, full function 🚀 <br> [![Travis
+PROJ7](https://img.shields.io/travis/hypertidy/PROJ.svg?branch=master&env=BUILD_NAME=proj7&label=PROJ7)](https://travis-ci.org/hypertidy/PROJ)
+PROJ version 7, full function 🤸 <!-- badges: end -->
 
 The goal of PROJ is to provide generic coordinate system transformations
-in R. This is same goal as the
+in R. The functional requirement is for the system library PROJ \>= 6.
+This is same goal as the
 [reproj](https://cran.r-project.org/package=reproj) package, but
-provided for later versions of the underlying library.
+provided for later versions of the underlying library. Reproj currently
+uses PROJ 4 or 5 via the proj4 package, so PROJ augments that coverage
+for the more modern library versions.
 
 I need basic coordinate transformations for matrices or data frames with
 efficient vectors of coordinate fields. Constantly unpacking and packing
@@ -63,6 +61,11 @@ details are provided in the [PROJ
 documentation](https://proj.org/development/reference/functions.html#c.proj_create).
 
 ## Things to be aware of
+
+Note that for PROJ5 (and lower) this package is non-functional (can use
+proj4). The testing here on Travis ensures that the package installs
+successfully for various versions of PROJ, although underlying
+functionality is disabled for 4 and 5 (and for no PROJ).
 
   - Input can be a data frame or a matrix, but internally input is
     assumed to be x, y, z, *and time*. So the output is always a
@@ -125,7 +128,7 @@ library(PROJ)
 lon <- c(0, 147)
 lat <- c(0, -42)
 dst <- "+proj=laea +datum=WGS84 +lon_0=147 +lat_0=-42"
-src <- "WGS84"
+src <- "+proj=longlat +datum=WGS84"
 
 ## forward transformation
 (xy <- proj_trans_generic( cbind(lon, lat), dst, source = src))
@@ -154,6 +157,11 @@ proj_trans_generic(cbind(xy$x_, xy$y_), src, source = dst)
 #> 
 #> $t_
 #> numeric(0)
+
+
+## note that NAs propagate in the usual way
+lon <- c(0, NA, 147)
+lat <- c(NA, 0, -42)
 ```
 
 A more realistic example with coastline map data.
@@ -178,6 +186,40 @@ plot(lonlat$x_, lonlat$y_, pch = ".")
 
 <img src="man/figures/README-example-2.png" width="100%" />
 
+## Convert projection strings
+
+We can generate PROJ or WKT2 strings.
+
+``` r
+cat(wkt2 <- proj_create("EPSG:4326"))
+#> GEOGCRS["WGS 84",
+#>     DATUM["World Geodetic System 1984",
+#>         ELLIPSOID["WGS 84",6378137,298.257223563,
+#>             LENGTHUNIT["metre",1]]],
+#>     PRIMEM["Greenwich",0,
+#>         ANGLEUNIT["degree",0.0174532925199433]],
+#>     CS[ellipsoidal,2],
+#>         AXIS["geodetic latitude (Lat)",north,
+#>             ORDER[1],
+#>             ANGLEUNIT["degree",0.0174532925199433]],
+#>         AXIS["geodetic longitude (Lon)",east,
+#>             ORDER[2],
+#>             ANGLEUNIT["degree",0.0174532925199433]],
+#>     USAGE[
+#>         SCOPE["unknown"],
+#>         AREA["World"],
+#>         BBOX[-90,-180,90,180]],
+#>     ID["EPSG",4326]]
+
+
+cat(proj_create("+proj=etmerc +lat_0=38 +lon_0=125 +ellps=bessel"))
+#> CONVERSION["PROJ-based coordinate operation",
+#>     METHOD["PROJ-based operation method: +proj=etmerc +lat_0=38 +lon_0=125 +ellps=bessel"]]
+
+proj_create(wkt2, format = 1L)
+#> [1] "+proj=longlat +datum=WGS84 +no_defs +type=crs"
+```
+
 # Speed comparisons
 
 ``` r
@@ -185,10 +227,12 @@ library(reproj)
 library(rgdal)
 library(lwgeom)
 library(sf)
-#> Linking to GEOS 3.8.0, GDAL 2.4.2, PROJ 5.2.0
-#> WARNING: different compile-time and runtime versions for GEOS found:
-#> Linked against: 3.8.0-CAPI-1.13.1  compiled against: 3.7.1-CAPI-1.11.1
-#> It is probably a good idea to reinstall sf, and maybe rgeos and rgdal too
+#> Linking to GEOS 3.8.0, GDAL 3.0.4, PROJ 7.0.0
+#> 
+#> Attaching package: 'sf'
+#> The following object is masked from 'package:lwgeom':
+#> 
+#>     st_make_valid
 lon <- w[,1]
 lat <- w[,2]
 lon <- rep(lon, 25)
@@ -204,7 +248,7 @@ xyzt <- cbind(lon, lat, z, 0)
 
 rbenchmark::benchmark(
           PROJ = proj_trans_generic(ll, target = dst, source = llproj, z_ = z),
-          reproj = reproj(xyz, target = dst, source = llproj),
+          reproj = reproj(ll, target = dst, source = llproj),
           rgdal = project(ll, dst),
           sf_project = sf_project(llproj, dst, ll),
         # lwgeom = st_transform_proj(sfx, dst),
@@ -212,10 +256,10 @@ rbenchmark::benchmark(
         replications = 100) %>%
   dplyr::arrange(elapsed) %>% dplyr::select(test, elapsed, replications)
 #>         test elapsed replications
-#> 1 sf_project   4.536          100
-#> 2      rgdal   4.962          100
-#> 3     reproj   6.097          100
-#> 4       PROJ   6.953          100
+#> 1      rgdal   5.209          100
+#> 2       PROJ   7.572          100
+#> 3 sf_project   7.647          100
+#> 4     reproj   8.425          100
 ```
 
 The speed is not exactly stunning, but with PROJ we can also do 3D
@@ -224,11 +268,10 @@ with the underlying API function `proj_trans_array()`, instead of
 `proj_trans_generic()`, but I don’t really know.
 
 A geocentric example, suitable for plotting in rgl and used extensively
-with quadmesh, silicate, and
-anglr.
+with quadmesh, silicate, and anglr.
 
 ``` r
-xyzt <- proj_trans_generic(cbind(w[,1], w[,2]), target = "+proj=geocent +datum=WGS84", source = "WGS84")
+xyzt <- proj_trans_generic(cbind(w[,1], w[,2]), target = "+proj=geocent +datum=WGS84", source = "EPSG:4326")
 plot(as.data.frame(xyzt[1:3]), pch = ".", asp = 1)
 ```
 
@@ -300,7 +343,7 @@ Bioconductor, or in the works? Let me know\!
 
 -----
 
-Please note that the ‘PROJ’ project is released with a [Contributor Code
+Please note that the PROJ project is released with a [Contributor Code
 of
 Conduct](https://github.com/hypertidy/PROJ/blob/master/CODE_OF_CONDUCT.md).
 By contributing to this project, you agree to abide by its terms.

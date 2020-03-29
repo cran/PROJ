@@ -8,7 +8,7 @@
 <meta name="generator" content="pandoc" />
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 
 
@@ -18,9 +18,9 @@
 
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
-a.sourceLine { display: inline-block; line-height: 1.25; }
-a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -30,14 +30,16 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 code.sourceCode { white-space: pre-wrap; }
-a.sourceLine { text-indent: -1em; padding-left: 1em; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
 }
-pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
-pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
     position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    border: none; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -46,9 +48,9 @@ pre.numberSource a.sourceLine::before
   }
 pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
 div.sourceCode
-  {  }
+  {   }
 @media screen {
-a.sourceLine::before { text-decoration: underline; }
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 code span.al { color: #ff0000; font-weight: bold; } /* Alert */
 code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
@@ -115,9 +117,6 @@ padding-right: 2em;
 font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 font-size: 14px;
 line-height: 1.35;
-}
-#header {
-text-align: center;
 }
 #TOC {
 clear: both;
@@ -286,7 +285,8 @@ code > span.st { color: #d14; }
 code > span.co { color: #888888; font-style: italic; } 
 code > span.ot { color: #007020; } 
 code > span.al { color: #ff0000; font-weight: bold; } 
-code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
 </style>
 
 
@@ -332,14 +332,25 @@ code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61
 <h2>How to use PROJ?</h2>
 <p>Get the package installed, load it and use the function <code>proj_trans_generic()</code>.</p>
 <p>If you don’t have system PROJ version 6 (or higher) the function will fail.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">library</span>(PROJ)</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw">proj_trans_generic</span>(<span class="kw">cbind</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">147</span>), <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">-42</span>), <span class="dv">0</span>), <span class="dt">target =</span> <span class="st">&quot;+proj=laea +datum=WGS84&quot;</span>, <span class="dt">source =</span> <span class="st">&quot;WGS84&quot;</span>)</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="co">#&gt; Error in proj_trans_generic(cbind(c(0, 147), c(0, -42), 0), target = &quot;+proj=laea +datum=WGS84&quot;, : x coordinates must be 2-columns</span></a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="kw">library</span>(PROJ)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="kw">proj_trans_generic</span>(<span class="kw">cbind</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">147</span>), <span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">-42</span>)), <span class="dt">z_ =</span> <span class="dv">0</span>, <span class="dt">target =</span> <span class="st">&quot;+proj=laea +datum=WGS84&quot;</span>, <span class="dt">source =</span> <span class="st">&quot;WGS84&quot;</span>)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="co">#&gt; $x_</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="co">#&gt; [1]       0 5969744</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="co">#&gt; </span></span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="co">#&gt; $y_</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="co">#&gt; [1]        0 -9803200</span></span>
+<span id="cb1-8"><a href="#cb1-8"></a><span class="co">#&gt; </span></span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="co">#&gt; $z_</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a><span class="co">#&gt; [1] 0 0</span></span>
+<span id="cb1-11"><a href="#cb1-11"></a><span class="co">#&gt; </span></span>
+<span id="cb1-12"><a href="#cb1-12"></a><span class="co">#&gt; $t_</span></span>
+<span id="cb1-13"><a href="#cb1-13"></a><span class="co">#&gt; numeric(0)</span></span></code></pre></div>
+<p>Note that we always assume input of <code>cbind(longitude, latitude)</code> and can optionally provide a vector of <code>z_</code> as well as <code>t_</code>. We cannot provide a 3 or 4 column matrix, z and t must be provided separately as named arguments.</p>
 <p>Note that various forms of projection string are supported, we can use PROJ.4 style (as per target above), bare names from <a href="http://www.epsg.org/">EPSG</a> (as per source above), full-blown WKT2 strings, or ‘auth:code’ forms such as “epsg:3857”. (Note that “+init=…” forms cannot be used in 6 or above).</p>
 <p>The goal is for the <a href="https://CRAN.r-project.org/package=reproj">reproj package</a> to wrap this package. In time that will be the easiest way to run coordinate transformations with PROJ for versions 4, 5, 6, 7 or above.</p>
 <p>To find out if your system supports PROJ 6 (or higher) use the function <code>ok_proj6()</code>.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">ok_proj6</span>()</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="co">#&gt; [1] TRUE</span></a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">ok_proj6</span>()</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
 </div>
 
 
