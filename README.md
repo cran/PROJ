@@ -7,12 +7,12 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
-[![Travis build
-status](https://travis-ci.org/hypertidy/PROJ.svg?branch=master)](https://travis-ci.org/hypertidy/PROJ)[![AppVeyor
-build
-status](https://ci.appveyor.com/api/projects/status/jb3sg8r0exigdbb0/branch/master?svg=true)](https://ci.appveyor.com/project/mdsumner/proj-448mq)[![Codecov
-test
-coverage](https://codecov.io/gh/hypertidy/PROJ/branch/master/graph/badge.svg)](https://codecov.io/gh/hypertidy/PROJ?branch=master)
+[![R build
+status](https://github.com/hypertidy/PROJ/workflows/R-CMD-check/badge.svg)](https://github.com/hypertidy/PROJ/actions)
+[![R build
+status](https://github.com/hypertidy/PROJ/workflows/test-coverage/badge.svg)](https://github.com/hypertidy/PROJ/actions)
+[![R build
+status](https://github.com/hypertidy/PROJ/workflows/pkgdown/badge.svg)](https://github.com/hypertidy/PROJ/actions)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/PROJ)](https://cran.r-project.org/package=PROJ)
 [![CRAN\_Download\_Badge](http://cranlogs.r-pkg.org/badges/PROJ)](https://cran.r-project.org/package=PROJ)
@@ -30,7 +30,8 @@ PROJ7](https://img.shields.io/travis/hypertidy/PROJ.svg?branch=master&env=BUILD_
 PROJ version 7, full function 🤸 <!-- badges: end -->
 
 The goal of PROJ is to provide generic coordinate system transformations
-in R. The functional requirement is for the system library PROJ \>= 6.
+in R with a functional requirement for the system library PROJ \>= 6.
+
 This is same goal as the
 [reproj](https://cran.r-project.org/package=reproj) package, but
 provided for later versions of the underlying library. Reproj currently
@@ -83,7 +84,7 @@ validations of CRS representations would be good, for instance we can
 just gsub out “+init=” for those sorts of things, and being able to
 write “WGS84” as a valid source or target is a massive bonus.
 
-## WAAT
+## WHY
 
 This package strips code out of the development version of proj4, with
 attribution to the author.
@@ -92,14 +93,15 @@ attribution to the author.
   - Why not sf? It brings a lot of baggage, and can’t do geocentric
     transformations.
   - Why not rgdal? Still baggage, no transformations possible without
-    special data formats.
+    special data formats, no geocentric.
   - Why not lgeom? That package is format-specific, and does not work
     with generic data coordinates so is unsuitable for many
     straightforward and efficient data-handling schemes.
   - Why not mapproj? This is unusable for real-world projections in my
     experience, it seems to be written for some basic graphics cases.
-  - Why not reproj? This is an extension for reproj, to bridge it from
-    PROJ version 4 and 5, to version 6 and 7 and beyond.
+  - Why not reproj? reproj will be improved by importing PROJ. This is
+    an extension for reproj, to bridge it from PROJ version 4 and 5, to
+    version 6 and 7 and beyond.
 
 ## Installation
 
@@ -108,10 +110,8 @@ ci/travis/ - much gratitude to GDAL for examples of how to do all this\!
 
 # Notes
 
-THINGS TO WORRY ABOUT for development here:
+None of these things are dealt with.
 
-  - the *name* of this package
-  - t and z
   - threading, see the PJ\_CONTEXT
   - coordinate order
   - the zero value after transformation, it comes out like -3.19835e-15
@@ -142,7 +142,7 @@ src <- "+proj=longlat +datum=WGS84"
 #> [1] 0 0
 #> 
 #> $t_
-#> numeric(0)
+#> [1] 0 0
 
 ## inverse transformation
 proj_trans_generic(cbind(xy$x_, xy$y_), src, source = dst)
@@ -156,7 +156,7 @@ proj_trans_generic(cbind(xy$x_, xy$y_), src, source = dst)
 #> [1] 0 0
 #> 
 #> $t_
-#> numeric(0)
+#> [1] 0 0
 
 
 ## note that NAs propagate in the usual way
@@ -188,7 +188,7 @@ plot(lonlat$x_, lonlat$y_, pch = ".")
 
 ## Convert projection strings
 
-We can generate PROJ or WKT2 strings.
+We can generate PROJ or within limitations WKT2 strings.
 
 ``` r
 cat(wkt2 <- proj_create("EPSG:4326"))
@@ -211,7 +211,7 @@ cat(wkt2 <- proj_create("EPSG:4326"))
 #>         BBOX[-90,-180,90,180]],
 #>     ID["EPSG",4326]]
 
-
+## this is not proper WKT2 and cannot be used, compare to sf::st_crs("+proj=etmerc +lat_0=38 +lon_0=125 +ellps=bessel")
 cat(proj_create("+proj=etmerc +lat_0=38 +lon_0=125 +ellps=bessel"))
 #> CONVERSION["PROJ-based coordinate operation",
 #>     METHOD["PROJ-based operation method: +proj=etmerc +lat_0=38 +lon_0=125 +ellps=bessel"]]
@@ -227,7 +227,7 @@ library(reproj)
 library(rgdal)
 library(lwgeom)
 library(sf)
-#> Linking to GEOS 3.8.0, GDAL 3.0.4, PROJ 7.0.0
+#> Linking to GEOS 3.6.1, GDAL 2.2.3, PROJ 4.9.3
 #> 
 #> Attaching package: 'sf'
 #> The following object is masked from 'package:lwgeom':
@@ -256,10 +256,10 @@ rbenchmark::benchmark(
         replications = 100) %>%
   dplyr::arrange(elapsed) %>% dplyr::select(test, elapsed, replications)
 #>         test elapsed replications
-#> 1      rgdal   5.209          100
-#> 2       PROJ   7.572          100
-#> 3 sf_project   7.647          100
-#> 4     reproj   8.425          100
+#> 1 sf_project    3.51          100
+#> 2      rgdal    3.66          100
+#> 3     reproj    4.53          100
+#> 4       PROJ    5.74          100
 ```
 
 The speed is not exactly stunning, but with PROJ we can also do 3D

@@ -1,6 +1,6 @@
 Package: PROJ
 Title: Generic Coordinate System Transformations Using 'PROJ'
-Version: 0.1.5
+Version: 0.1.6
 Authors@R: 
     c(person(given = "Michael D.",
            family = "Sumner",
@@ -35,7 +35,7 @@ RoxygenNote: 7.1.0
 Language: en-US
 VignetteBuilder: knitr
 NeedsCompilation: yes
-Packaged: 2020-03-29 14:04:47 UTC; mdsumner
+Packaged: 2020-04-15 03:25:31 UTC; mdsumner
 Author: Michael D. Sumner [aut, cre] (<https://orcid.org/0000-0002-2471-7511>),
   Jeroen Ooms [ctb] (provided PROJ library support on Windows, and
     assistance with Windows configuration),
@@ -43,4 +43,4 @@ Author: Michael D. Sumner [aut, cre] (<https://orcid.org/0000-0002-2471-7511>),
     6)
 Maintainer: Michael D. Sumner <mdsumner@gmail.com>
 Repository: CRAN
-Date/Publication: 2020-03-29 14:20:06 UTC
+Date/Publication: 2020-04-15 04:40:02 UTC

@@ -1,3 +1,10 @@
+# PROJ 0.1.6
+
+* We now use the PROJ::proj_trans internally, and just loop over vectors. 
+(so proj_trans_generic is a misnomer, technically). 
+
+* Prevent error on out of bounds values from `proj_trans_generic()`. We get `Inf`. 
+
 # PROJ 0.1.5
 
 * Attempt to fix errors on CRAN, add missing test for functionality 

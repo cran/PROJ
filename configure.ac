@@ -14,6 +14,7 @@ RBIN="${R_HOME}/bin/R"
 : ${CPPFLAGS=`"${RBIN}" CMD config CPPFLAGS`}
 : ${LDFLAGS=`"${RBIN}" CMD config LDFLAGS`}
 
+
 # honor PKG_xx overrides
 LIBS="${LIBS} ${PKG_LIBS}"
 # for CPPFLAGS we will superfluously double R's flags
@@ -29,6 +30,7 @@ AC_CHECK_LIB(proj,proj_normalize_for_visualization,,projok=no)
 #*** Install PROJ 6.0.0 or higher and if necessary set PKG_CPPFLAGS/PKG_LIBS accordingly.])
 #fi
 
+
 #undef HAVE_PROJ6_API
 if test "${projok}" = yes; then
    CPPFLAGS="${PKG_CPPFLAGS} -DHAVE_PROJ6_API=1"
@@ -40,3 +42,4 @@ AC_ARG_VAR([PKG_LIBS],[custom libraries for package compilation])
 
 AC_CONFIG_FILES(src/Makevars)
 AC_OUTPUT
+
