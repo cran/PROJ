@@ -9,13 +9,12 @@
 A wrapper around the generic coordinate transformation software 'PROJ'
   that transforms geospatial coordinates from one coordinate reference system ('CRS') 
   to another. This includes cartographic projections as well as geodetic transformations. 
-  Version 6.0.0 or higher is required, earlier versions if available are not used 
-  leaving this package harmlessly non-functional. The intention is for this package 
-  to be used by user-packages such as 'reproj', and that the older 'PROJ.4' and version 5 
+  Version 7.1.0-1 or higher of the R package 'libproj' is required. The intention is for this 
+  package to be used by user-packages such as 'reproj', and that the older 'PROJ.4' and version 5 
   pathways be provided by the 'proj4' package. Separating this disruptive version
   change (from 4.0 and 5.0, to 6.0 and above) allows the use of existing and 
-  stable code in 'proj4' alongside the new idioms and requirements of modern 'PROJ'
-  using this package. The 'PROJ' library is available from <https://proj.org/>.
+  stable code in 'proj4' alongside the new idioms and requirements of modern 'PROJ'. For control
+  of metadata files for the 'PROJ' library, see tools in the 'libproj' package.
 
 The goal of PROJ is to provide generic coordinate system transformations in R
 without requiring bespoke formats for storing basic data.
@@ -25,7 +24,7 @@ without requiring bespoke formats for storing basic data.
 \tabular{ll}{
 \code{\link{ok_proj6}} determine if PROJ version >=6 is available
 \code{\link{proj_trans_generic}} a light wrapper around the underlying transformation functionality of PROJ version 6 (or higher)
-\code{\link{proj_create}} convert projection strings to WKT2 or PROJ format
+removed   proj_create convert projection strings to WKT2 or PROJ format
 }
 }
 
@@ -44,6 +43,7 @@ Other contributors:
 \itemize{
   \item Jeroen Ooms (provided PROJ library support on Windows, and assistance with Windows configuration) [contributor]
   \item Simon Urbanek (wrote original code versions for PROJ version 6) [copyright holder, contributor]
+  \item Dewey Dunnington (key code contributions, and provided libproj to improve things a lot) [contributor]
 }
 
 }
