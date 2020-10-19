@@ -1,6 +1,6 @@
 Package: PROJ
 Title: Generic Coordinate System Transformations Using 'PROJ'
-Version: 0.3.1
+Version: 0.4.0
 Authors@R: 
     c(person(given = "Michael D.",
            family = "Sumner",
@@ -13,15 +13,8 @@ Authors@R:
            comment = "wrote original code versions for PROJ version 6"), 
     person("Dewey", "Dunnington", role = c("ctb"), 
            comment = "key code contributions, and provided libproj to improve things a lot"))
-Description: A wrapper around the generic coordinate transformation software 'PROJ'
-  that transforms geospatial coordinates from one coordinate reference system ('CRS') 
-  to another. This includes cartographic projections as well as geodetic transformations. 
-  Version 7.1.0-1 or higher of the R package 'libproj' is required. The intention is for this 
-  package to be used by user-packages such as 'reproj', and that the older 'PROJ.4' and version 5 
-  pathways be provided by the 'proj4' package. Separating this disruptive version
-  change (from 4.0 and 5.0, to 6.0 and above) allows the use of existing and 
-  stable code in 'proj4' alongside the new idioms and requirements of modern 'PROJ'. For control
-  of metadata files for the 'PROJ' library, see tools in the 'libproj' package. 
+Description: Currently non-operational, a harmless wrapper to allow package 'reproj' to install and 
+  function while relying on the 'proj4' package. 
 Depends: R (>= 3.0.2)
 License: GPL-3
 Encoding: UTF-8
@@ -32,10 +25,8 @@ BugReports: https://github.com/hypertidy/PROJ/issues
 RoxygenNote: 7.1.1
 Language: en-US
 VignetteBuilder: knitr
-LinkingTo: libproj (>= 7.1.0-1)
-Imports: libproj (>= 7.1.0-1)
 NeedsCompilation: yes
-Packaged: 2020-08-31 09:41:54 UTC; mdsumner
+Packaged: 2020-10-19 11:48:28 UTC; mdsumner
 Author: Michael D. Sumner [aut, cre] (<https://orcid.org/0000-0002-2471-7511>),
   Jeroen Ooms [ctb] (provided PROJ library support on Windows, and
     assistance with Windows configuration),
@@ -45,4 +36,4 @@ Author: Michael D. Sumner [aut, cre] (<https://orcid.org/0000-0002-2471-7511>),
     improve things a lot)
 Maintainer: Michael D. Sumner <mdsumner@gmail.com>
 Repository: CRAN
-Date/Publication: 2020-08-31 11:20:02 UTC
+Date/Publication: 2020-10-19 17:20:10 UTC
