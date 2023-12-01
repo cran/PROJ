@@ -1,0 +1,21 @@
+RWINLIB = ../windows/proj-$(VERSION)
+
+TARGET = lib$(R_ARCH)
+
+PKG_LIBS =                  \
+    -L$(RWINLIB)/$(TARGET)    \
+    -L$(RWINLIB)/lib$(R_ARCH) \
+    -lproj -lsqlite3 -lcurl -ltiff -lgeotiff -Lwin64
+
+
+all: clean winlibs
+
+winlibs:
+ mkdir -p ../inst
+ "${R_HOME}/bin${R_ARCH_BIN}/Rscript.exe" --vanilla "../tools/winlibs.R" $(VERSION)
+ cp -r $(RWINLIB)/share/proj ../inst/
+
+clean:
+  rm -f $(SHLIB) $(OBJECTS)
+
+.PHONY: all winlibs clean

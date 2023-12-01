@@ -8,32 +8,41 @@ target <- "+proj=merc +datum=WGS84"
 
 test_that("out of bounds works", {
 
+  skip_if(!ok_proj6())
+
+  # #here I don't put the expected output because it's (possibly) lib version dependent
+  ## ,  "Error detected, some values Inf"
   a <- expect_output({
 
     proj_trans(x, target, source = source)
-
   })
+
   ## fixed
   expect_true(!all(is.finite(a$x_)))
 
+
+  ## could be
+  #"Point outside of projection domain".
+  #"Error detected, some values Inf  (ubuntu 20.04)
   expect_output(  proj_trans(cbind(2e10, 2e12),
                                      source = "+proj=stere +datum=WGS84",
                                      target = "+proj=laea +datum=WGS84")
-                  , "tolerance condition error")
+                  )
 
-  expect_silent(  proj_trans(cbind(2e10, 2e12),
+
+  expect_true(is.list(  proj_trans(cbind(2e10, 2e12),
                                      source = "+proj=gnom +datum=WGS84",
-                                     target = "+proj=laea +datum=WGS84"))
+                                     target = "+proj=laea +datum=WGS84")))
 
-  ## crazy stuff is fine
+  # crazy stuff is fine
   expect_output(proj_trans(cbind(2e10, 2e12),
                                    source = "+proj=longlat +datum=WGS84",
                                    target = "+proj=laea +datum=WGS84"),
-                "latitude or longitude exceeded limits")
+                "Error detected, some values Inf")
 
-  expect_silent(proj_trans(cbind(2e10, 2e12),
+  expect_true(all(!is.finite(unlist(proj_trans(cbind(2e10, 2e12),
                                    target = "+proj=longlat +datum=WGS84",
-                                   source = "+proj=laea +datum=WGS84"))
+                                   source = "+proj=laea +datum=WGS84")))))
 
   expect_silent({
     proj_trans(cbind(NA_real_, NA_real_),

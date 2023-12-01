@@ -1,8 +1,12 @@
-# PROJ 0.4.0
+# PROJ 0.4.5
 
-* This release makes PROJ entirely non-functional. This allows the reproj package to continue
- to work and support its dependencies (via the proj4 package). 
+* New function `proj_version()`. 
 
+* reinstated proj function! 
+
+* `ok_proj6()` is now meaningful again. 
+
+* Deprecated old `proj_trans_generic()`. 
 
 # PROJ 0.3.1
 
