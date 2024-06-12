@@ -9,7 +9,7 @@
 #' See the [library documentation](https://proj.org/development/reference/functions.html#transformation-setup)
 #' for details on input and output formats.
 #'
-#' @section: warning
+#' @section warning:
 #' Note that a PROJ string is not a full specification, in particular this means that a string like "+proj=laea" cannot be converted
 #' to full WKT, because it is technically a transformation step not a crs. To get the full WKT form use a string like "+proj=laea +type=crs".
 #' @export
@@ -20,23 +20,17 @@
 #' @return character string in requested format
 #'
 #' @examples
-#' if (ok_proj6()) {
-#' cat(proj_crs_text("OGC:CRS84", format = 0L))
-#' proj_crs_text("OGC:CRS84", format = 1L)
+#' cat(proj_crs_text("EPSG:4326", format = 0L))
+#' proj_crs_text("EPSG:4326", format = 1L)
 #' south55 <- "+proj=utm +zone=55 +south +ellps=GRS80 +units=m +no_defs +type=crs"
 #' proj_crs_text(proj_crs_text(south55), 1L)
-#' }
 proj_crs_text <- function(source, format = 0L) {
-  if (!ok_proj6()) {
-    message("no PROJ lib available")
-   return(NA_character_)
-  }
   stopifnot(length(format) == 1L)
   stopifnot(format %in% c(0L, 1L, 2L))
   stopifnot(is.character(source))
   stopifnot(length(source) == 1L)
   tst <- try(.Call("C_proj_crs_text",
-        crs_ = source,
+        crs_ = proj_add_type_crs_if_needed(source),
         format = as.integer(format),
         PACKAGE = "PROJ"), silent = TRUE)
   if (is.null(tst) || inherits(tst, "try-error")) return(NA_character_)

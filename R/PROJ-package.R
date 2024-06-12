@@ -4,6 +4,7 @@
 # The following block is used by usethis to automatically manage
 # roxygen namespace tags. Modify with care!
 ## usethis namespace: start
+#' @importFrom lifecycle deprecated
 #' @useDynLib PROJ, .registration = TRUE
 ## usethis namespace: end
 NULL
@@ -22,7 +23,6 @@ NULL
 #'  \code{\link{proj_version}} report PROJ lib version if available _and_ >= 6.3.1
 #'  }
 #' @name PROJ-package
-#' @docType package
 NULL
 
 

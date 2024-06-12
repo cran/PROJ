@@ -1,4 +1,5 @@
 Balamuta
+CMD
 CPP
 CRS
 EPSG
@@ -14,6 +15,7 @@ Rcpp
 WGS
 WKT
 anglr
+api
 auth
 behaviour
 code’
@@ -34,4 +36,5 @@ reproj
 rgl
 travis
 xymap
+xyzm
 ’
